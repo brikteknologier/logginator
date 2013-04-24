@@ -1,0 +1,15 @@
+{
+  "name": "logginator",
+  "version": "1.0.0",
+  "description": "Creates an instance of TaggedLogger",
+  "main": "index.js",
+  "dependencies": {
+    "winston": "*",
+    "tagged-console-target": "~1.0.4",
+    "tagged-logger": "~1.0.0"
+  },
+  "repository": "https://github.com/brikteknologier/logginator.git",
+  "author": "Magnus Hoff <magnus.hoff@brik.no>",
+  "license": "BSD",
+  "readmeFilename": "README.md"
+}
