@@ -13,8 +13,9 @@ function moduleName() {
   return "main";
 }
 
-module.exports = function () {
-  var winstonLogger = new (winston.Logger)({ transports: [ new TaggedConsoleTarget() ] });
+module.exports = function (config) {
+  config || config = { transports: [ new TaggedConsoleTarget() ] };
+  var winstonLogger = new (winston.Logger)(config);
   var log = new TaggedLogger(winstonLogger, []);
 
   var tag = moduleName();
