@@ -14,8 +14,16 @@ function moduleName() {
 }
 
 module.exports = function (config) {
-  config || config = { transports: [ new TaggedConsoleTarget() ] };
-  var winstonLogger = new (winston.Logger)(config);
+  var winstonConfig = {};
+  if (config) {
+    // Currently no config format to understand.
+  } else {
+    // Default to console output if no config specified.
+    winstonConfig = { transports: [ new TaggedConsoleTarget() ] };
+  }
+
+  var winstonLogger = new (winston.Logger)(winstonConfig);
+
   var log = new TaggedLogger(winstonLogger, []);
 
   var tag = moduleName();
