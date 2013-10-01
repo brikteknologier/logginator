@@ -6,6 +6,28 @@ var TaggedConsoleTarget = require('tagged-console-target');
 var TaggedLogger = require('tagged-logger');
 var moduleName = require('./module-name');
 
+// List of syslog levels, because the one present in winston is
+// incorrect and makes logging fail.
+var syslogLevels = {
+  debug: 0,
+  info: 1,
+  notice: 2,
+  warning: 3,
+  warn: 3, // Keep warn for API compatibility
+  error: 4,
+  crit: 5,
+  alert: 6,
+  emerg: 7
+};
+
+// Monkey-patch winston-syslog to treat "warn" as "warning", to
+// maintain API compatibility.
+var originalSyslogLog = winstonSyslog.prototype.log;
+winstonSyslog.prototype.log = function (level, msg, meta, callback) {
+  if (level === "warn") level = "warning";
+  return originalSyslogLog.call(this, level, msg, meta, callback);
+};
+
 var engines = {
   "console": function () { return new TaggedConsoleTarget(); },
 
@@ -55,6 +77,7 @@ module.exports = function (config) {
   });
 
   var winstonLogger = new (winston.Logger)(winstonConfig);
+  winstonLogger.setLevels(syslogLevels);
 
   var log = new TaggedLogger(winstonLogger, []);
 
