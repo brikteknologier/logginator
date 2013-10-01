@@ -1,4 +1,5 @@
 var fs = require('fs');
+var os = require('os');
 var winston = require('winston');
 var winstonSyslog = require('winston-syslog').Syslog;
 var TaggedConsoleTarget = require('tagged-console-target');
@@ -9,25 +10,31 @@ var engines = {
   "console": function () { return new TaggedConsoleTarget(); },
 
   "syslog": function (spec) {
+    var options = {};
+
     var LINUX_LOG = "/dev/log", BSD_LOG = "/var/run/log";
 
-    var protocol = spec.protocol || "unix", path;
-    if (protocol === "unix") {
-      path = spec.path;
-      if (!path) {
-        if (fs.statSync(LINUX_LOG).isSocket()) path = LINUX_LOG;
-        else if (fs.statSync(BSD_LOG).isSocket()) path = BSD_LOG;
+    options.protocol = spec.protocol || "unix";
+    if (options.protocol === "unix") {
+      options.path = spec.path;
+      if (!options.path) {
+        if (fs.statSync(LINUX_LOG).isSocket()) options.path = LINUX_LOG;
+        else if (fs.statSync(BSD_LOG).isSocket()) options.path = BSD_LOG;
         else {
           throw new Error("Failed to find log socket path, and no such " +
             "path was configured in \"path\" for the syslog logger backend");
         }
       }
     }
+    // For TCP or UDP:
+    options.host = spec.host;
+    options.port = spec.port;
 
-    return new winstonSyslog({
-      "protocol": protocol,
-      "path": path
-    });
+    options.app_name = spec.appname || moduleName(module);
+    options.facility = spec.facility;
+    options.localhost = spec.localhost || os.hostname();
+
+    return new winstonSyslog(options);
   }
 };
 
@@ -35,6 +42,7 @@ var defaultConfig = [ { "transport": "console" } ];
 
 module.exports = function (config) {
   config = config || defaultConfig;
+  if (!Array.isArray(config)) config = []; // Handle {} as no output
 
   var winstonConfig = {
     transports: []
