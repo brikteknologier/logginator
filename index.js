@@ -34,15 +34,26 @@ var engines = {
   "syslog": function (spec) {
     var options = {};
 
-    var LINUX_LOG = "/dev/log", BSD_LOG = "/var/run/log";
+    var knownLogTargets = [
+      "/dev/log", // Linux
+      "/var/run/syslog", // OS X
+      "/var/run/log" // BSD
+    ];
+    function isValidTarget(name) {
+      return fs.existsSync(name) && fs.statSync(name).isSocket();
+    }
 
     options.protocol = spec.protocol || "unix";
     if (options.protocol === "unix") {
       options.path = spec.path;
       if (!options.path) {
-        if (fs.statSync(LINUX_LOG).isSocket()) options.path = LINUX_LOG;
-        else if (fs.statSync(BSD_LOG).isSocket()) options.path = BSD_LOG;
-        else {
+        for (var i = 0; i < knownLogTargets.length; ++i) {
+          if (isValidTarget(knownLogTargets[i])) {
+            options.path = knownLogTargets[i];
+            break;
+          }
+        }
+        if (!options.path) {
           throw new Error("Failed to find log socket path, and no such " +
             "path was configured in \"path\" for the syslog logger backend");
         }
