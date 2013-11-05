@@ -13,7 +13,7 @@ function moduleId(logginatorModule) {
 
 function packageDef(logginatorModule) {
   var ppath = path.dirname(logginatorModule.parent.filename);
-  while (ppath) {
+  while (ppath && ppath !== '/') {
     var packFile = path.join(ppath, "package.json");
     if (fs.existsSync(packFile)) {
       try {
