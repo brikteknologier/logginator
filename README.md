@@ -20,9 +20,9 @@ configurations, for example:
 
     var log = require('logginator')([
       {
-        "type": "console"
+        "transport": "console"
       }, {
-        "type": "syslog"
+        "transport": "syslog"
       }
     ]);
 
@@ -32,7 +32,7 @@ console
 To output logs to the console, use this configuration:
 
     {
-      "type": "console"
+      "transport": "console"
     }
 
 Console output has no configuration options.
@@ -43,7 +43,7 @@ syslog
 To output logs to syslog, this configuration is sufficient:
 
     {
-      "type": "syslog"
+      "transport": "syslog"
     }
 
 Additional options are:
@@ -63,8 +63,8 @@ Additional options are:
    `"udp4"` and `"udp6"`, which all require `host` and `port` to be specified.
  * `path`: The path to log to when using `"unix"` for `protocol`. If not set,
    logginator will try to deduce the default system log pipe by trying
-   `/dev/log` and `/var/run/log`. If both of these fail, logginator will raise
-   an exception.
+   `/dev/log`, `/var/run/syslog` and `/var/run/log` in order. If all of these
+   fail, logginator will raise an exception.
  * `host` and `port`: The host and port pair for the TCP or UDP log target if
    using any other protocol than `"unix"`. Note that the target syslog daemon
    must be configured to accept connections on the specified protocol.
