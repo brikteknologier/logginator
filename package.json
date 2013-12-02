@@ -7,6 +7,7 @@
     "winston": "*",
     "tagged-console-target": "~1.0.4",
     "tagged-logger": "~1.0.0",
+    "unix-dgram": "git://github.com/brikteknologier/node-unix-dgram.git",
     "winston-syslog": "git://github.com/indexzero/winston-syslog.git#v0.2.3"
   },
   "repository": "https://github.com/brikteknologier/logginator.git",
