@@ -5,6 +5,7 @@ var winstonSyslog = require('winston-syslog').Syslog;
 var TaggedConsoleTarget = require('tagged-console-target');
 var TaggedLogger = require('tagged-logger');
 var moduleName = require('./module-name');
+var util = require('util');
 
 // List of syslog levels, because the one present in winston is
 // incorrect and makes logging fail.
@@ -97,5 +98,14 @@ module.exports = function (name, config) {
 
   var log = new TaggedLogger(winstonLogger, []);
 
-  return log.createSublogger(name);
+  var logger = log.createSublogger(name);
+  logger.info('created logger');
+  logger.info('using the following transports:');
+
+  config.forEach(function(transport, i) {
+    logger.info(util.format('%d: [%s], with config %s',
+        i + 1, transport.transport, JSON.stringify(transport)));
+  });
+
+  return logger;
 };
