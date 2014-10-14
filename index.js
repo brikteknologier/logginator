@@ -73,7 +73,12 @@ var engines = {
 
 var defaultConfig = [ { "transport": "console" } ];
 
-module.exports = function (config) {
+module.exports = function (name, config) {
+  if (typeof name != 'string') {
+    config = name;
+    name = moduleName(module);
+  }
+
   config = config || defaultConfig;
   if (!Array.isArray(config)) config = []; // Handle {} as no output
 
@@ -92,6 +97,5 @@ module.exports = function (config) {
 
   var log = new TaggedLogger(winstonLogger, []);
 
-  var tag = moduleName(module);
-  return log.createSublogger(tag);
+  return log.createSublogger(name);
 };
