@@ -77,7 +77,7 @@ var defaultConfig = [ { "transport": "console" } ];
 module.exports = function (identifiers, config) {
   if (typeof config == 'undefined') {
     config = identifiers;
-    identifiers = [moduleName(module)];
+    identifiers = [ moduleName(module) ];
   }
 
   if (typeof identifiers == 'string')
