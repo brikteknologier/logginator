@@ -74,11 +74,14 @@ var engines = {
 
 var defaultConfig = [ { "transport": "console" } ];
 
-module.exports = function (name, config) {
-  if (typeof name != 'string') {
-    config = name;
-    name = moduleName(module);
+module.exports = function (identifiers, config) {
+  if (typeof config == 'undefined') {
+    config = identifiers;
+    identifiers = [moduleName(module)];
   }
+
+  if (typeof identifiers == 'string')
+    identifiers = [ identifiers ];
 
   config = config || defaultConfig;
   if (!Array.isArray(config)) config = []; // Handle {} as no output
@@ -96,9 +99,8 @@ module.exports = function (name, config) {
   var winstonLogger = new (winston.Logger)(winstonConfig);
   winstonLogger.setLevels(syslogLevels);
 
-  var log = new TaggedLogger(winstonLogger, []);
+  var logger = new TaggedLogger(winstonLogger, identifiers);
 
-  var logger = log.createSublogger(name);
   logger.info('created logger');
   logger.info('using the following transports:');
 
