@@ -1,3 +1,8 @@
+/*
+ * Tries to guesstimate the name of the module using logginator.
+ * Intended to be used in the cases where application name is not given.
+ */
+
 var fs = require('fs');
 var path = require('path');
 
