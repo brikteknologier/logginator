@@ -2,6 +2,7 @@ var fs = require('fs');
 var os = require('os');
 var winston = require('winston');
 var winstonSyslog = require('winston-syslog').Syslog;
+var winstonPapertrail = require('winston-papertrail').Papertrail;
 var TaggedConsoleTarget = require('tagged-console-target');
 var TaggedLogger = require('tagged-logger');
 var moduleName = require('./module-name');
@@ -69,6 +70,18 @@ var engines = {
     options.localhost = spec.localhost || os.hostname();
 
     return new winstonSyslog(options);
+  },
+
+  "papertrail": function(spec) {
+    if (!spec.host || !spec.port) throw new Error("Host and port are required" + 
+        "for papertrail log target");
+
+    return new winstonPapertrail({
+      program: spec.program,
+      host: spec.host,
+      port: spec.port,
+      colorize: true
+    });
   }
 };
 
