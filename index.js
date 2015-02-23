@@ -77,7 +77,7 @@ var engines = {
         "for papertrail log target");
 
     return new winstonPapertrail({
-      program: spec.program,
+      program: spec.program || process.title,
       host: spec.host,
       port: spec.port,
       colorize: true
