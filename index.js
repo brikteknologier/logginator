@@ -7,6 +7,7 @@ var TaggedConsoleTarget = require('tagged-console-target');
 var TaggedLogger = require('tagged-logger');
 var moduleName = require('./module-name');
 var util = require('util');
+var _ = require('underscore');
 
 // List of syslog levels, because the one present in winston is
 // incorrect and makes logging fail.
@@ -76,12 +77,9 @@ var engines = {
     if (!spec.host || !spec.port) throw new Error("Host and port are required" + 
         "for papertrail log target");
 
-    return new winstonPapertrail({
-      program: spec.program || process.title,
-      host: spec.host,
-      port: spec.port,
-      colorize: true
-    });
+    spec = _.extend({ program: process.title }, spec);
+
+    return new winstonPapertrail(spec);
   }
 };
 
