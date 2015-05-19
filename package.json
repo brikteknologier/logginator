@@ -9,7 +9,7 @@
     "underscore": "^1.8.2",
     "winston": "^0.9.0",
     "winston-papertrail": "^1.0.1",
-    "winston-syslog": "git://github.com/brikteknologier/winston-syslog.git"
+    "winston-syslog": "^1.1.0"
   },
   "repository": "https://github.com/brikteknologier/logginator.git",
   "author": "Magnus Hoff <magnus.hoff@brik.no>",
