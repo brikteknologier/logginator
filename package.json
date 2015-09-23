@@ -1,6 +1,6 @@
 {
   "name": "logginator",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "Creates an instance of TaggedLogger",
   "main": "index.js",
   "dependencies": {
