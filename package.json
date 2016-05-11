@@ -4,7 +4,7 @@
   "description": "Creates an instance of TaggedLogger",
   "main": "index.js",
   "dependencies": {
-    "tagged-console-target": "^1.0.4",
+    "tagged-console-target": "^1.1.0",
     "tagged-logger": "^1.0.0",
     "underscore": "^1.8.2",
     "winston": "^0.9.0",
