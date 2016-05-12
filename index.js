@@ -3,25 +3,14 @@ var os = require('os');
 var winston = require('winston');
 var winstonSyslog = require('winston-syslog').Syslog;
 var winstonPapertrail = require('winston-papertrail').Papertrail;
+var winstonSlack = require('winston-slack-transport');
 var TaggedConsoleTarget = require('tagged-console-target');
 var TaggedLogger = require('tagged-logger');
-var moduleName = require('./module-name');
 var util = require('util');
 var _ = require('underscore');
-
-// List of syslog levels, because the one present in winston is
-// incorrect and makes logging fail.
-var syslogLevels = {
-  debug: 0,
-  info: 1,
-  notice: 2,
-  warning: 3,
-  warn: 3, // Keep warn for API compatibility
-  error: 4,
-  crit: 5,
-  alert: 6,
-  emerg: 7
-};
+var loglevels = require('./loglevels');
+var moduleName = require('./module-name');
+var slackFormatter = require('./slack-formatter');
 
 // Monkey-patch winston-syslog to treat "warn" as "warning", to
 // maintain API compatibility.
@@ -76,7 +65,7 @@ var engines = {
   },
 
   "papertrail": function(spec) {
-    if (!spec.host || !spec.port) throw new Error("Host and port are required" + 
+    if (!spec.host || !spec.port) throw new Error("Host and port are required " + 
         "for papertrail log target");
 
     spec = _.extend({ program: process.title }, spec);
@@ -88,6 +77,15 @@ var engines = {
     transport.exceptionsLevel = 'error';
 
     return transport;
+  },
+
+  "slack": function (spec) {
+    if (!spec.webhook_url)
+      throw new Error("webhook_url is required for slack log target");
+
+    spec.custom_formatter = spec.custom_formatter || slackFormatter;
+
+    return new winstonSlack(spec);
   }
 };
 
@@ -116,7 +114,7 @@ module.exports = function (identifiers, config) {
   });
 
   var winstonLogger = new (winston.Logger)(winstonConfig);
-  winstonLogger.setLevels(syslogLevels);
+  winstonLogger.setLevels(loglevels);
 
   var logger = new TaggedLogger(winstonLogger, identifiers);
 
