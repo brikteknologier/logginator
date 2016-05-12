@@ -12,7 +12,6 @@ Usage
 
 Config
 ======
-
 Optional. If left unspecified, logginator will default to console output.
 
 To configure the backends, specify an array with the desired backend
@@ -28,7 +27,6 @@ configurations, for example:
 
 console
 -------
-
 To output logs to the console, use this configuration:
 
     {
@@ -39,7 +37,6 @@ Console output has no configuration options.
 
 syslog
 ------
-
 To output logs to syslog, this configuration is sufficient:
 
     {
@@ -68,3 +65,29 @@ Additional options are:
  * `host` and `port`: The host and port pair for the TCP or UDP log target if
    using any other protocol than `"unix"`. Note that the target syslog daemon
    must be configured to accept connections on the specified protocol.
+
+slack
+-----
+Configuration options:
+
+ * `webhook_url`: **required** The webhook URL, something like
+   `https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYY/ZZZZZZZZZZZZZZZZZZZZZZZZ`
+ * `level`: If specified, this logger will only log messages at the specified
+   level of importance and more important messages
+ * `custom_formatter`: a `function (level, msg, meta)` which returns a Slack
+   payload object
+
+Additionally, you can specify any Slack message parameters (such as `username`
+and `channel`), and it will be applied as a fallback if the given argument is
+not specified per message.
+
+For example, a valid configuration could look like this:
+
+    {
+      "transport": "slack",
+      "webhook_url": "https://hooks.slack.com/services/XX/YY/ZZ",
+      "channel": "#test-channel",
+      "username": "ErrorBot",
+      "level": "error",
+      "handleExceptions": true
+    }
