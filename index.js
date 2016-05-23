@@ -79,7 +79,13 @@ var engines = {
 
     spec = _.extend({ program: process.title }, spec);
 
-    return new winstonPapertrail(spec);
+    var transport = new winstonPapertrail(spec);
+
+    // Workaround due to bug in winston-papertrail
+    // https://github.com/kenperkins/winston-papertrail/issues/40
+    transport.exceptionsLevel = 'error';
+
+    return transport;
   }
 };
 
