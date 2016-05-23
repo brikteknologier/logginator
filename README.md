@@ -29,13 +29,23 @@ configurations, for example:
 console
 -------
 
-To output logs to the console, use this configuration:
+To output logs to the console, this configuration is sufficient:
 
     {
       "transport": "console"
     }
 
-Console output has no configuration options.
+Additional options are:
+
+ * `level`: The minimum level of log messages to output to this logger, for
+   example `"info"`. Keep this unset to allow all messages that are accepted
+   by the logger object
+ * `handleExceptions`: Set to `true` to intercept unhandled exceptions and
+   output them to this log target
+ * `exceptionsLevel`: The log level at which to log exceptions. Defaults to
+   `"error"`
+ * `humanReadableUnhandledException`: Format exception log output in a more
+   readable fashion
 
 syslog
 ------

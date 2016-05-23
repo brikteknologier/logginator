@@ -32,7 +32,9 @@ winstonSyslog.prototype.log = function (level, msg, meta, callback) {
 };
 
 var engines = {
-  "console": function () { return new TaggedConsoleTarget(); },
+  "console": function (spec) {
+    return new TaggedConsoleTarget(spec);
+  },
 
   "syslog": function (spec) {
     var options = {};
